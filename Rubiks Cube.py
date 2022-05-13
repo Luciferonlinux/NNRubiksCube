@@ -1,6 +1,7 @@
 import pycuber as pc
 from ScrambleGenerator import FullScramble
 
+# Todo: Cube in form of a matrix for pattern recognition
 # Todo: Make Pattern Recognition for backpropagation (white cross)
 
 
