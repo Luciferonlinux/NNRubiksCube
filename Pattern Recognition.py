@@ -1,3 +1,1 @@
-from pycuber import cube
-
-mycube = cube
+# use pycuber method for cfop
