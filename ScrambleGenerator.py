@@ -4,7 +4,6 @@ from random import randint
 def FullScramble():
 
     faceOptions = (0, 1, 2, 3, 4, 5)
-    moveOptions = ("F", "F'", "F2", "R", "R'", "R2", "U", "U'", "U2", "B", "B'", "B2", "L", "L'", "L2", "D", "D'", "D2")
     bad = True
     scramble = []
     scrambleFaces = []
@@ -25,26 +24,7 @@ def FullScramble():
 
     # Generate a String based on the above generated sequence
     for i in range(20):
-        match scrambleFaces[i]:
-            case 0:
-                move = moveOptions[randint(0, 2)]
-                scramble.append(move)
-            case 1:
-                move = moveOptions[randint(3, 5)]
-                scramble.append(move)
-            case 2:
-                move = moveOptions[randint(6, 8)]
-                scramble.append(move)
-            case 3:
-                move = moveOptions[randint(9, 11)]
-                scramble.append(move)
-            case 4:
-                move = moveOptions[randint(12, 14)]
-                scramble.append(move)
-            case 5:
-                move = moveOptions[randint(13, 15)]
-                scramble.append(move)
-
+        scramble.append(moveswitcher(scrambleFaces[i]))
     return scramble
 
 
@@ -52,7 +32,6 @@ def FullScramble():
 def customScramble(length):
 
     faceOptions = (0, 1, 2, 3, 4, 5)
-    moveOptions = ("F", "F'", "F2", "R", "R'", "R2", "U", "U'", "U2", "B", "B'", "B2", "L", "L'", "L2", "D", "D'", "D2")
     bad = True
     scramble = []
     scrambleFaces = []
@@ -71,24 +50,39 @@ def customScramble(length):
                 bad = False
 
     for i in range(length):
-        match scrambleFaces[i]:
-            case 0:
-                move = moveOptions[randint(0, 2)]
-                scramble.append(move)
-            case 1:
-                move = moveOptions[randint(3, 5)]
-                scramble.append(move)
-            case 2:
-                move = moveOptions[randint(6, 8)]
-                scramble.append(move)
-            case 3:
-                move = moveOptions[randint(9, 11)]
-                scramble.append(move)
-            case 4:
-                move = moveOptions[randint(12, 14)]
-                scramble.append(move)
-            case 5:
-                move = moveOptions[randint(13, 15)]
-                scramble.append(move)
-
+        scramble.append(moveswitcher(scrambleFaces[i]))
     return scramble
+
+
+def moveswitcher(i):
+    moveOptions = {
+        0: "F",
+        1: "F'",
+        2: "F2",
+        3: "R",
+        4: "R'",
+        5: "R2",
+        6: "U",
+        7: "U'",
+        8: "U2",
+        9: "B",
+        10: "B'",
+        11: "B2",
+        12: "L",
+        13: "L'",
+        14: "L2",
+        15: "D",
+        16: "D'",
+        17: "D2"
+        }
+
+    move = {
+        0: moveOptions.get(randint(0, 2)),
+        1: moveOptions.get(randint(3, 5)),
+        2: moveOptions.get(randint(6, 8)),
+        3: moveOptions.get(randint(9, 11)),
+        4: moveOptions.get(randint(12, 14)),
+        5: moveOptions.get(randint(15, 17))
+    }
+
+    return move.get(i, "invalid move")
