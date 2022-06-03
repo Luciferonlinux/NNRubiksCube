@@ -5,7 +5,7 @@ def FullScramble():
 
     faceOptions = (0, 1, 2, 3, 4, 5)
     bad = True
-    scramble = []
+    scramble = ""
     scrambleFaces = []
 
     # Generate moves until a 20 long sequence has no repetition
@@ -24,7 +24,7 @@ def FullScramble():
 
     # Generate a String based on the above generated sequence
     for i in range(20):
-        scramble.append(moveswitcher(scrambleFaces[i]))
+        scramble = moveswitcher(scrambleFaces[i]) + " " + scramble
     return scramble
 
 
@@ -33,7 +33,7 @@ def customScramble(length):
 
     faceOptions = (0, 1, 2, 3, 4, 5)
     bad = True
-    scramble = []
+    scramble = ""
     scrambleFaces = []
 
     while bad is True:
@@ -50,10 +50,11 @@ def customScramble(length):
                 bad = False
 
     for i in range(length):
-        scramble.append(moveswitcher(scrambleFaces[i]))
+        scramble = moveswitcher(scrambleFaces[i]) + " " + scramble
     return scramble
 
 
+# replaces match-case from python 3.10
 def moveswitcher(i):
     moveOptions = {
         0: "F",

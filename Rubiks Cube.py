@@ -26,8 +26,8 @@ def main():
 
     # show the scrambled Cube
     print(repr(mycube))
-    return 1
 
 
 if __name__ == '__main__':
     main()
+    exit()
