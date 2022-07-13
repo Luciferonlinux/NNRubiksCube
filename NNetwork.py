@@ -17,15 +17,13 @@ def NN(cubelist):
     """
 
     cubetensor = convtotensor(cubelist)
-    shape = cubetensor.shape
-    return shape
-    # model = Sequential()
-    # model.add(
-    #    Embedding(
-    #        input_dim=cubetensor.tf.tensor
-    #
-    #    )
-    # )
+    model = Sequential()
+    model.add(
+        Embedding(
+            input_dim=cubetensor.tf.tensor
+        )
+    )
 
 
-NN(convtotensor([1, 1, 1, 2, 2, 3, 5, 1, 2, 4, 2, 3, 4, 1]))
+print(NN(convtotensor([1, 1, 1, 2, 2, 3, 5, 1, 2, 4, 2, 3, 4, 1])))
+print(tf.config.list_physical_devices())
