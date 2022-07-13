@@ -25,7 +25,7 @@ def main():
     mycube = fullyScrambledCube(mycube)
 
     # show the scrambled Cube
-    print(repr(mycube))
+    print(mycube)
 
 
 if __name__ == '__main__':
