@@ -1,6 +1,6 @@
 import tensorflow as tf
-from keras.models import Sequential
-from keras.layers import LSTM, Dense, Embedding, Conv3D, Input
+
+cubelist = [1, 3, 5, 1, 6, 4, 3, 2, 2, 4, 1, 5]
 
 
 def convtotensor(arg):
@@ -11,19 +11,6 @@ def convtotensor(arg):
     return arg
 
 
-def NN(cubelist):
-    """
-    Takes the Cube as List and runs it through the Neural network
-    """
-
-    cubetensor = convtotensor(cubelist)
-    model = Sequential()
-    model.add(
-        Embedding(
-            input_dim=cubetensor.tf.tensor
-        )
-    )
-
-
-print(NN(convtotensor([1, 1, 1, 2, 2, 3, 5, 1, 2, 4, 2, 3, 4, 1])))
 print(tf.config.list_physical_devices())
+# cubetensor = convtotensor(cubelist)
+# print(create_model(cube))

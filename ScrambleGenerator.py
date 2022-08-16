@@ -36,7 +36,7 @@ def customScramble(length):
     scramble = ""
     scrambleFaces = []
 
-    while bad is True:
+    while bad:
         scrambleFaces = []
         for i in range(length):
             face = randint(0, 5)
