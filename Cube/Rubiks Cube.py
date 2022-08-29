@@ -13,21 +13,6 @@ def fullyScrambledCube(myCube):
     return myCube
 
 
-def main():
-    # initialize the Cube
-    mycube = pc.Cube()
-    # print(repr(mycube))
-
-    # scramble the Cube
-    # mycube = fullyScrambledCube(mycube)
-
-    # show the scrambled Cube
-    print(mycube)
-    cubelist = Listrepresentation(mycube)
-    print(stringify(cubelist))
-    print(pc.Cube(pc.array_to_cubies(stringify(cubelist))))
-
-
 def stringify(intcube):
     """
     Converts a List of Ints to a String
@@ -62,13 +47,27 @@ def Listrepresentation(cube):
             "R": ("RUF", "RU", "RUB", "RF", "R", "RB", "RFD", "RD", "RDB"),  # "R" Face
             "B": ("BUR", "BU", "BUL", "BR", "B", "BL", "BDR", "BD", "BDL"),  # "B" Face
             "U": ("UBL", "UB", "UBR", "UL", "U", "UR", "UFL", "UF", "UFR"),  # "U" Face
-            "D": ("DFL", "DF", "DFR", "DL", "D", "DR", "DBL", "DB", "DBR")  # "D" Face
+            "D": ("DFL", "DF", "DFR", "DL", "D", "DR", "DBL", "DB", "DBR")   # "D" Face
         }.get(face)
         for location in cb:
             Cubelist.append(colorcode.get(str(cube[location][face])))
     return Cubelist
 
 
+def main():
+    # initialize the Cube
+    mycube = pc.Cube()
+    # print(repr(mycube))
+
+    # scramble the Cube
+    # mycube = fullyScrambledCube(mycube)
+
+    # show the scrambled Cube
+    print(mycube)
+    cubelist = Listrepresentation(mycube)
+    print(stringify(cubelist))
+    print(pc.Cube(pc.array_to_cubies(stringify(cubelist))))
+
+
 if __name__ == '__main__':
     main()
-    # exit()

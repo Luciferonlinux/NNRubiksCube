@@ -1,5 +1,5 @@
 # NNRubiksCube
-A Neural Network that learns to Solve the Rubik's Cube
+## A Neural Network that learns to Solve the Rubik's Cube
 
 for Windows:
     Python 3.8 and newer
