@@ -78,12 +78,11 @@ def moveswitcher(i):
         }
 
     move = {
-        0: moveOptions.get(randint(0, 2)),
-        1: moveOptions.get(randint(3, 5)),
-        2: moveOptions.get(randint(6, 8)),
-        3: moveOptions.get(randint(9, 11)),
-        4: moveOptions.get(randint(12, 14)),
-        5: moveOptions.get(randint(15, 17))
+        0: moveOptions[randint(0, 2)],
+        1: moveOptions[randint(3, 5)],
+        2: moveOptions[randint(6, 8)],
+        3: moveOptions[randint(9, 11)],
+        4: moveOptions[randint(12, 14)],
+        5: moveOptions[randint(15, 17)]
     }
-
-    return move.get(i, "invalid move")
+    return move[i]

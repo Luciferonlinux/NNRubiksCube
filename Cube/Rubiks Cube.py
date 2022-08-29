@@ -48,9 +48,9 @@ def Listrepresentation(cube):
             "B": ("BUR", "BU", "BUL", "BR", "B", "BL", "BDR", "BD", "BDL"),  # "B" Face
             "U": ("UBL", "UB", "UBR", "UL", "U", "UR", "UFL", "UF", "UFR"),  # "U" Face
             "D": ("DFL", "DF", "DFR", "DL", "D", "DR", "DBL", "DB", "DBR")   # "D" Face
-        }.get(face)
+        }[face]
         for location in cb:
-            Cubelist.append(colorcode.get(str(cube[location][face])))
+            Cubelist.append(colorcode[str(cube[location][face])])
     return Cubelist
 
 
