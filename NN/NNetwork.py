@@ -1,9 +1,11 @@
 import tensorflow as tf
+import keras.layers
 
-cubelist = [1, 3, 5, 1, 6, 4, 3, 2, 2, 4, 1, 5]
+from random import randint
+cubelist = [randint(0, 5) for _ in range(54)]
 
 
-def convtotensor(arg):
+def conv_to_tensor(arg):
     """
     Takes any list or tuple or nparray and converts it to a tf.Tensor
     """
@@ -12,5 +14,19 @@ def convtotensor(arg):
 
 
 print(tf.config.list_physical_devices())
-# cubetensor = convtotensor(cubelist)
-# print(create_model(cube))
+
+
+class MyModel(keras.Model):
+
+    def __init__(self):
+        super().__init__()
+        self.dense1 = keras.layers.Dense(4, activation=tf.nn.relu)
+        self.dense2 = keras.layers.Dense(5, activation=tf.nn.softmax)
+        self.dropout = keras.layers.Dropout(0.5)
+
+    def call(self, inputs, training=None, mask=None):
+        x = self.dense1(inputs)
+        if training:
+            x = self.dropout(x, training=training)
+        return self.dense2
+
