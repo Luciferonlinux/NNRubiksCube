@@ -326,4 +326,7 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
+# Data (Make your own data)
+*.csv
+
 # End of https://www.toptal.com/developers/gitignore/api/python,pycharm+all,windows,macos,venv
