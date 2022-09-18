@@ -4,7 +4,7 @@ from pycuber import Formula, Cube
 from pycuber.solver.cfop.cross import CrossSolver
 from pycuber.solver.cfop.f2l import F2LSolver
 from pycuber.solver.cfop.oll import OLLSolver
-from pycuber.solver.cfop.pll import PLLSolver
+# from pycuber.solver.cfop.pll import PLLSolver
 
 
 class Scramblegen:
@@ -106,14 +106,13 @@ class Scramblegen:
         cross = crss.cube
 
         f2ls = F2LSolver(cross)
-        for _ in range(4):
-            next(f2ls.solve())
+        for _ in enumerate(f2ls.solve()):
+            pass
         f2l = f2ls.cube
 
         olls = OLLSolver(f2l)
         olls.solve()
-        oll = olls.cube
-        return oll
+        return olls.cube
 
     # returns a cube with solved F2L
     def OLLScramble(self):
@@ -123,8 +122,8 @@ class Scramblegen:
         cross = crss.cube
 
         f2ls = F2LSolver(cross)
-        for _ in range(4):
-            next(f2ls.solve())
+        for _ in enumerate(f2ls.solve()):
+            pass
         return f2ls.cube
 
     # returns a cube with a solved cross
