@@ -2,8 +2,10 @@ from Cube.ScrambleGenerator import Scramblegen
 import pycuber.solver.cfop.pll as p
 import pycuber.solver.cfop.oll as o
 import pandas as pd
+import numpy as np
 import time
 from multiprocessing import Pool
+from pathlib import Path
 
 
 def Listrepresentation(cube):
@@ -38,53 +40,65 @@ def Listrepresentation(cube):
 def PLL_pair(lol):
     scramble = Scramblegen()
     pll = scramble.PLLScramble()
-    case = [p.PLLSolver(pll).recognise()]
-    return Listrepresentation(pll), case
+    del scramble
+    case = p.PLLSolver(pll).recognise()
+    listrep = Listrepresentation(pll)
+    listrep.append(case)
+    return np.array(listrep)
 
 
 def OLL_pair(lol):
     scramble = Scramblegen()
     oll = scramble.OLLScramble()
-    case = [o.OLLSolver(oll).recognise()]
-    return Listrepresentation(oll), case
+    del scramble
+    case = o.OLLSolver(oll).recognise()
+    listrep = Listrepresentation(oll)
+    listrep.append(case)
+    return np.array(listrep)
 
 
-def pll_scramble(count, write=True):
+def pll_scramble(count, path, write=True):
     """
     Make a .csv file containing scrambles, that can be solved using pll and what pll is used
     """
-    header = ['Cubelist', 'PLL Type']
+    header = ["Square % s" % i if i < 54 else "PLL Type" for i in range(55)]
+    csvpath = path / "plls.csv"
 
-    with Pool(8) as pool:
+    print(f"Generating {count} pll scrambles ...")
+    with Pool() as pool:
         process = pool.imap_unordered(PLL_pair, range(count))
         data = [i for i in process]
     plls = pd.DataFrame(data, columns=header)
-    print(plls)
-
+    # print(plls)
+    print("Writing to .csv ...")
     if write:
         plls.to_csv(
-            path_or_buf="Datasets/plls.csv",
+            header=True,
+            path_or_buf=csvpath,
             sep=',',
             na_rep='n/a',
             index=False
         )
 
 
-def oll_scramble(count, write=True):
+def oll_scramble(count, path, write=True):
     """
     Make a .csv file containing scrambles, that can be solved using pll and what pll is used
     """
-    header = ['Cubelist', 'OLL Type']
+    header = ["Square % s" % i if i < 54 else "PLL Type" for i in range(55)]
+    csvpath = path / "olls.csv"
 
-    with Pool(8) as pool:
+    print(f"Generating {count} oll scrambles ...")
+    with Pool() as pool:
         process = pool.imap_unordered(OLL_pair, range(count))
         data = [i for i in process]
-    plls = pd.DataFrame(data, columns=header)
-    print(plls)
-
+    olls = pd.DataFrame(data, columns=header)
+    # print(olls)
+    print("Writing to .csv ...")
     if write:
-        plls.to_csv(
-            path_or_buf="Datasets/olls.csv",
+        olls.to_csv(
+            header=True,
+            path_or_buf=csvpath,
             sep=',',
             na_rep='n/a',
             index=False
@@ -92,7 +106,9 @@ def oll_scramble(count, write=True):
 
 
 if __name__ == '__main__':
+    datasetpath = Path(__file__).parents[1] / "Datasets"
     start = time.perf_counter()
-    oll_scramble(200)
+    pll_scramble(10, datasetpath)
+    oll_scramble(10, datasetpath)
     end = time.perf_counter()
     print(f'took {end - start} seconds')
