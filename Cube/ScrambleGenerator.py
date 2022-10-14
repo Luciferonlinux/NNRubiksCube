@@ -1,5 +1,4 @@
 from random import randint
-
 from pycuber import Formula, Cube
 from pycuber.solver.cfop.cross import CrossSolver
 from pycuber.solver.cfop.f2l import F2LSolver
@@ -53,18 +52,12 @@ class Scramblegen:
         scrambleFaces = []
 
         # Generate moves until a 20 long sequence has no repetition
-        while bad is True:
-            scrambleFaces = []
-            for i in range(20):
-                face = randint(0, 5)
+        i = 0
+        while i <= 20:
+            face = randint(0, 5)
+            if len(scrambleFaces) < 1 or scrambleFaces[i-1] != faceOptions[face]:
                 scrambleFaces.append(faceOptions[face])
-
-            for i in range(0, len(scrambleFaces) - 1):
-                if scrambleFaces[i] == scrambleFaces[i+1]:
-                    bad = True
-                    break
-                else:
-                    bad = False
+                i += 1
 
         # Generate a String based on the above generated sequence
         for i in range(20):
@@ -80,18 +73,12 @@ class Scramblegen:
         scramble = ""
         scrambleFaces = []
 
-        while bad:
-            scrambleFaces = []
-            for i in range(length):
-                face = randint(0, 5)
+        i = 0
+        while i <= length:
+            face = randint(0, 5)
+            if scrambleFaces[i - 1] != faceOptions[face]:
                 scrambleFaces.append(faceOptions[face])
-
-            for i in range(0, len(scrambleFaces) - 1):
-                if scrambleFaces[i] == scrambleFaces[i+1]:
-                    bad = True
-                    break
-                else:
-                    bad = False
+                i += 1
 
         for i in range(length):
             scramble = self.moveswitcher(scrambleFaces[i]) + " " + scramble
@@ -116,6 +103,10 @@ class Scramblegen:
 
     # returns a cube with solved F2L
     def OLLScramble(self):
+        """
+        Returns a cube with solved f2l
+            :return: pc.Cube
+        """
         scrambled = self.FullScramble()
         crss = CrossSolver(scrambled)
         crss.solve()

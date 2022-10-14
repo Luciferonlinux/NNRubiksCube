@@ -12,8 +12,10 @@ from sys import stdout
 def Listrepresentation(cube):
     """
     Creates a List with integers Representing a Cubes sides
-    :param cube: Pc.Cube
-    :return: List of ints Representing a Cubes sides
+    args:
+        cube: Pc.Cube
+
+        returns: List of ints Representing a Cubes sides
     """
     colorcode = {
         "[r]": 0,
@@ -43,20 +45,18 @@ def LL_pair(*args):
     scramble = Scramblegen()
     oll = scramble.OLLScramble()
     del scramble
+    ollrep = Listrepresentation(oll)
     ocube = o.OLLSolver(oll)
     ollcase = ocube.recognise()
-    # print(type(ollcase))
-    # caselist = [x for x in ollcase]
     ocube.solve()
     pllcase = p.PLLSolver(ocube.cube).recognise()
-    ollrep = Listrepresentation(oll)
     ollrep.append(ollcase)
     pllrep = Listrepresentation(ocube.cube)
     pllrep.append(pllcase)
     return ollrep, pllrep
 
 
-def LL_scramble(count, path, write=True):
+def LL_scramble(count, path, write=True, processes=16):
     """
     Make a .csv file containing scrambles, that can be solved using pll and what pll is used
     """
@@ -102,7 +102,7 @@ def LL_scramble(count, path, write=True):
                 idx = 0
         if done:
             stop = time.perf_counter()
-            stdout.write(f"\rDone in {stop - start:.2f}\n")
+            stdout.write(f"\rDone in {stop - start:.2f}s\n")
 
     header = ["Square % s" % i if i < 54 else "Type" for i in range(55)]
     ollpath = path / f"olls_{int(count / 1000)}k.csv"
@@ -110,7 +110,7 @@ def LL_scramble(count, path, write=True):
     t = Thread(target=pretty_loading_animation)
     print(f"Generating {count} LL scrambles ...")
     t.start()
-    with Pool() as pool:
+    with Pool(processes) as pool:
         process = pool.imap_unordered(LL_pair, range(count))
         oll = []
         pll = []
@@ -146,6 +146,6 @@ def LL_scramble(count, path, write=True):
 if __name__ == '__main__':
     datasetpath = Path(__file__).parents[1] / "Datasets"
     start = time.perf_counter()
-    LL_scramble(50000, datasetpath)
+    LL_scramble(100, datasetpath, processes=16)
     end = time.perf_counter()
     print(f'Took {end - start:.2f} seconds')
