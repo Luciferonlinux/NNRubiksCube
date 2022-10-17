@@ -1,6 +1,8 @@
 import tensorflow as tf
 import keras.layers
 import keras.losses
+import keras.optimizers
+import keras.metrics
 
 
 def conv_to_tensor(arg):
@@ -16,31 +18,43 @@ class MyModel(keras.Model):
     def __init__(self):
         super().__init__()
         self.inputs = keras.layers.InputLayer(input_shape=(54,), name='Inputs')
-        self.denseoll1 = keras.layers.Dense(75, activation=tf.nn.sigmoid, name='denseoll1')
-        self.denseoll2 = keras.layers.Dense(150, activation=tf.nn.sigmoid, name='denseoll2')
-        self.denseoll3 = keras.layers.Dense(216, activation=tf.nn.softmax, name='denseoll3')
+        self.denseollin = keras.layers.Dense(54, activation=tf.nn.relu, name='denseollin')
+        self.denseoll2 = keras.layers.Dense(400, activation=tf.nn.relu, name='denseoll2')
+        self.denseoll0 = keras.layers.Dense(216, activation=tf.nn.softmax, name='denseoll0')
+
+        self.densepllin = keras.layers.Dense(54, activation=tf.nn.relu, name='densepllin')
+        self.densepll2 = keras.layers.Dense(680, activation=tf.nn.relu, name='densepll2')
+        self.densepll3 = keras.layers.Dense(680, activation=tf.nn.sigmoid, name='densepll3')
+        self.densepll0 = keras.layers.Dense(340, activation=tf.nn.softmax, name='densepll0')
 
     def call(self, inputs, training=None, mask=None):
         pass
 
     def pll_compile(self, name="PllCase"):
         self.model = keras.Sequential(name=name)
-        self.model.add(self.embedding)
-        self.model.add(self.densepll1)
-        self.model.compile(optimizer="adamax", loss=keras.losses.BinaryCrossentropy())
+        self.model.add(self.inputs)
+        self.model.add(self.densepllin)
+        self.model.add(self.densepll2)
+        self.model.add(self.densepll3)
+        self.model.add(self.densepll0)
+        self.model.compile(optimizer=keras.optimizers.Adam(learning_rate=0.0001),
+                           loss=keras.losses.CategoricalCrossentropy(from_logits=False),
+                           metrics=[keras.metrics.CategoricalAccuracy()]
+                           )
+        self.model.build()
 
     def oll_compile(self, name="OllCase"):
         self.model = keras.Sequential(name=name)
         self.model.add(self.inputs)
-        print(f"shape of input: {self.model.output_shape}")
-        self.model.add(self.denseoll1)
-        print(f"shape of dense out: {self.model.output_shape}")
+        self.model.add(self.denseollin)
         self.model.add(self.denseoll2)
-        print(f"shape of dense out: {self.model.output_shape}")
-        self.model.add(self.denseoll3)
-        print(f"shape of dense out: {self.model.output_shape}")
-        self.model.compile(optimizer="adamax", loss=keras.losses.BinaryCrossentropy(from_logits=False))
-        print(f"shape of output: {self.model.output_shape}")
+        self.model.add(self.denseoll0)
+        self.model.compile(optimizer=keras.optimizers.Adam(learning_rate=0.0001),
+                           loss=keras.losses.CategoricalCrossentropy(from_logits=False),
+                           metrics=[keras.metrics.CategoricalAccuracy()]
+                           )
+        self.model.build()
+        # print(f"shape of output: {self.model.output_shape}")
 
     def f2l_compile(self, name="F2L"):
         self.model = keras.Sequential(name=name)
@@ -53,17 +67,32 @@ class MyModel(keras.Model):
     def __call__(self):
         self.model.summary()
 
-    def train(self, trainingmatrix, trainingvector):
+    def train(self, trainingmatrix, trainingvector, callbacks=None, epochs=50, verbose=2):
         self.model.fit(
             trainingmatrix,
             trainingvector,
-            epochs=10
+            callbacks=callbacks,
+            epochs=epochs,
+            verbose=verbose
         )
 
-    def predict(self, predictmatrix):
+    def predict(self, predictmatrix, **kwargs):
         return self.model.predict(
-            predictmatrix
+            predictmatrix,
+            kwargs
         )
+
+    def eval(self, validationmatrix, validationvector):
+        return self.model.evaluate(
+            validationmatrix,
+            validationvector,
+        )
+
+    def save(self, path, **kwargs):
+        self.model.save_weights(filepath=path)
+
+    def load(self, path):
+        self.model.load_weights(filepath=path)
 
 
 if __name__ == '__main__':

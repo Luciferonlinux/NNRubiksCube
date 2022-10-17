@@ -86,8 +86,8 @@ def getdata(loadup_test_data=False):
         loadup_testoll_vector = [onehotolllookup[x] for x in loadup_testoll_vec]
         loadup_testpll_vector = [onehotplllookup[x] for x in loadup_testpll_vec]
 
-        ollonehotlookup = {x: oll_algos[i][2] for i, x in enumerate(onehotoll)}
-        pllonehotlookup = {x: pll_algos[i][2] for i, x in enumerate(onehotpll)}
+        ollonehotlookup = {x: oll_algos.values[i][2] for i, x in enumerate(onehotollstr)}
+        pllonehotlookup = {x: pll_algos.values[i][2] for i, x in enumerate(onehotpllstr)}
 
         return (
             np.array(loadup_testoll_matrix),
@@ -177,7 +177,7 @@ def fit_NN():
     for train_index, test_index in kf.split(learnpllmatrix):
         X_train, X_test = learnpllmatrix[train_index], learnpllmatrix[test_index]
         y_train, y_test = learnpllvec[train_index], learnpllvec[test_index]
-        pllmodel.train(X_train, y_train, epochs=5)
+        pllmodel.train(X_train, y_train, epochs=5, verbose=1)
         print()
         # predicted = pllmodel.predict(X_test)
         # acc = accuracy(predicted, y_test)
@@ -186,7 +186,7 @@ def fit_NN():
     validation = ollmodel.predict(validationollmatrix)
     accurate = accuracy(validation, validationollvec)
     print(f"oll validation accuracy = {accurate}%")
-    pllmodel.save(oll_savepath)
+    ollmodel.save(oll_savepath)
 
     validation = pllmodel.predict(validationpllmatrix)
     accurate = accuracy(validation, validationpllvec)
@@ -213,14 +213,16 @@ def Use_NN():
 
     fullsolve = ""
     Cube = get_solved_f2l()
+    print(f"scrambled Cube:\n{repr(Cube)}")
     cubelist = np.array(Listrepresentation(Cube)) / 6
     oll_key = oll_nn.predict(cubelist)
-    oll_algo = oll_lookup[oll_key]
+    oll_algo = oll_lookup[f"{oll_key}"]
     Cube(oll_algo)
     fullsolve += f"OLL: {oll_algo},  "
     print(repr(Cube))
-    pll_key = pll_nn.predict(Listrepresentation(Cube)) / 6
-    pll_algo = pll_lookup[pll_key]
+    cubelist = np.array(Listrepresentation(Cube)) / 6
+    pll_key = pll_nn.predict(cubelist)
+    pll_algo = pll_lookup[f"{pll_key}"]
     Cube(pll_algo)
     fullsolve += f"PLL: {pll_algo}"
     solved_cube = pc.Cube()
@@ -235,4 +237,4 @@ def Use_NN():
 
 if __name__ == '__main__':
     # todo: create a nn for cross and f2l
-    fit_NN()
+    Use_NN()
