@@ -18,6 +18,11 @@ class MyModel(keras.Model):
     def __init__(self):
         super().__init__()
         self.inputs = keras.layers.InputLayer(input_shape=(54,), name='Inputs')
+
+        self.crossin = keras.layers.Dense(54, activation=tf.nn.relu, name='densecrossin')
+        self.cross_lstm = keras.layers.CuDNNLSTM(324, return_sequences=True, name='lstmcross')
+        self.crossout = keras.layers.Dense(18, activation=tf.nn.softmax, name='densecrossout')
+
         self.denseollin = keras.layers.Dense(54, activation=tf.nn.relu, name='denseollin')
         self.denseoll2 = keras.layers.Dense(400, activation=tf.nn.relu, name='denseoll2')
         self.denseoll0 = keras.layers.Dense(216, activation=tf.nn.softmax, name='denseoll0')
@@ -62,7 +67,15 @@ class MyModel(keras.Model):
 
     def cross_compile(self, name="Cross"):
         self.model = keras.Sequential(name=name)
-        pass
+        self.model.add(self.inputs)
+        self.model.add(self.crossin)
+        self.model.add(self.cross_lstm)
+        self.model.add(self.crossout)
+        self.model.compile(optimizer=keras.optimizers.Adam(learning_rate=0.001),
+                           loss=keras.losses.CategoricalCrossentropy(from_logits=True),
+                           metrics=[keras.metrics.CategoricalAccuracy()]
+                           )
+        self.model.build()
 
     def __call__(self):
         self.model.summary()
@@ -97,6 +110,7 @@ class MyModel(keras.Model):
 
 if __name__ == '__main__':
     from random import randint
+
     cubelist = [randint(0, 5) for _ in range(54)]
 
     inputvector = conv_to_tensor(cubelist)

@@ -77,8 +77,8 @@ def getdata(loadup_test_data=False):
         loadup_testplls = pd.read_csv(path / "plls_1k.csv", dtype=typedict)
 
         # get loadup test data and Normalize
-        loadup_testoll_matrix = loadup_testolls.iloc[:, :-1].values / 6
-        loadup_testpll_matrix = loadup_testplls.iloc[:, :-1].values / 6
+        loadup_testoll_matrix = loadup_testolls.iloc[:, :-1].values / 5
+        loadup_testpll_matrix = loadup_testplls.iloc[:, :-1].values / 5
         loadup_testoll_vec = loadup_testolls.iloc[:, -1].values
         loadup_testpll_vec = loadup_testplls.iloc[:, -1].values
 
@@ -106,14 +106,14 @@ def getdata(loadup_test_data=False):
         validationplls = pd.read_csv(path / "plls_10k.csv", dtype=typedict)
 
         # get training Data and Normalize
-        trainingollmatrix = trainolls.iloc[:, :-1].values / 6
-        trainingpllmatrix = trainplls.iloc[:, :-1].values / 6
+        trainingollmatrix = trainolls.iloc[:, :-1].values / 5
+        trainingpllmatrix = trainplls.iloc[:, :-1].values / 5
         trainingollvec = trainolls.iloc[:, -1].values
         trainingpllvec = trainplls.iloc[:, -1].values
 
         # get validation data and Normalize
-        validationollmatrix = validationolls.iloc[:, :-1].values / 6
-        validationpllmatrix = validationplls.iloc[:, :-1].values / 6
+        validationollmatrix = validationolls.iloc[:, :-1].values / 5
+        validationpllmatrix = validationplls.iloc[:, :-1].values / 5
         validationollvec = validationolls.iloc[:, -1].values
         validationpllvec = validationplls.iloc[:, -1].values
 
@@ -138,9 +138,19 @@ def getdata(loadup_test_data=False):
 def accuracy(prediction, actual):
     predict = prediction.tolist()
     act = actual.tolist()
-    matches = [i for i, j in zip(predict, act) if tf.argmax(i).numpy() == tf.argmax(j).numpy()]
+    matches = [i for i, j in zip(predict, act) if np.argmax(i) == np.argmax(j)]
     acc = len(matches) / len(act)
     return acc * 100
+
+
+def one_hotify(predicted_y):
+    assert len(predicted_y) == 1
+    # print(predicted_y)
+    index = np.argmax(predicted_y)
+    # print(index)
+    one_hot = np.zeros(len(predicted_y[0]))
+    one_hot.itemset(index, 1.0)
+    return one_hot
 
 
 def fit_NN():
@@ -201,32 +211,37 @@ def Use_NN():
 
     oll_nn = MyModel()
     oll_nn.oll_compile()
-    oll_nn()
+    # oll_nn()
     oll_nn.load(oll_savepath)
     oll_nn.eval(testoll_X, testoll_y)
 
     pll_nn = MyModel()
     pll_nn.pll_compile()
-    pll_nn()
+    # pll_nn()
     pll_nn.load(pll_savepath)
     pll_nn.eval(testpll_X, testpll_y)
 
     fullsolve = ""
     Cube = get_solved_f2l()
     print(f"scrambled Cube:\n{repr(Cube)}")
-    cubelist = np.array(Listrepresentation(Cube)) / 6
-    oll_key = oll_nn.predict(cubelist)
+    cubelist = np.array([Listrepresentation(Cube)]) / 5
+    oll_key = array2string(one_hotify(oll_nn.predict(cubelist)))
     oll_algo = oll_lookup[f"{oll_key}"]
     Cube(oll_algo)
     fullsolve += f"OLL: {oll_algo},  "
     print(repr(Cube))
-    cubelist = np.array(Listrepresentation(Cube)) / 6
-    pll_key = pll_nn.predict(cubelist)
+    cubelist = np.array([Listrepresentation(Cube)]) / 5
+    pll_key = array2string(one_hotify(pll_nn.predict(cubelist)))
     pll_algo = pll_lookup[f"{pll_key}"]
     Cube(pll_algo)
-    fullsolve += f"PLL: {pll_algo}"
+    cubelist = np.array([Listrepresentation(Cube)]) / 5
+    pll_key = array2string(one_hotify(pll_nn.predict(cubelist)))
+    last_step = pll_lookup[f"{pll_key}"]
+    Cube(last_step)
+    fullsolve += f"PLL: {pll_algo} {last_step}"
     solved_cube = pc.Cube()
-    if solved_cube == Cube:
+    print(repr(solved_cube))
+    if is_solved(Cube):
         print("We have successfully solved the Cube using the following sequence:")
         print(fullsolve)
         print(repr(Cube))
@@ -235,6 +250,37 @@ def Use_NN():
         print(f"After applying the sequence {fullsolve}\nThe Cube looks like this:\n{repr(Cube)}")
 
 
+def array2string(arr):
+    out = "["
+    for i in arr:
+        if len(out) > 2:
+            out += ", "
+        out += f"{i}"
+    out += "]"
+    return out
+
+
+def is_solved(Cube):
+    for side in "LUFDRB":
+        sample = Cube[side].facings[side]
+        for square in sum(Cube.get_face(side), []):
+            if square != sample:
+                return False
+    return True
+
+
+def test():
+    zero = np.zeros(2, dtype=float)
+    normal = np.array([0.002, 1.001], dtype=float)
+    print(repr(zero))
+    print(repr(normal))
+
+
 if __name__ == '__main__':
     # todo: create a nn for cross and f2l
+    # test()
     Use_NN()
+    # cubestring = stringify([1, 5, 1, 4, 0, 0, 3, 5, 3, 2, 5, 4, 3, 1, 3, 4, 4, 0, 2, 1, 3, 4, 2, 1, 4, 5, 1, 5, 0, 5, 2, 3, 2, 2, 2, 2, 0, 1, 0, 3, 4, 4, 4, 1, 3, 0, 0, 1, 2, 5, 0, 5, 3, 5])
+    # cube = pc.Cube(pc.array_to_cubies(cubestring))
+    # print(repr(cube))
+    # print(repr(cube(pc.Formula("R F D2 R' U B' D2 R B D"))))

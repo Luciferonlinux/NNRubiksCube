@@ -48,8 +48,11 @@ def main():
     algo_dict = []
     for line in oll_algos:
         for i in range(4):
+            formula = pc.Formula(line[2]).insert(0, pc.Step("U")*i)
+            u = pc.Step("U'") * i
+            formula.append(u)
             if len(algo_dict) < 2 or algo_dict[ids-1][1] != line[1][-3*i:] + line[1][:-3*i] != algo_dict[ids-2][1]:
-                algo_dict.append([ids, line[1][-3*i:] + line[1][:-3*i], pc.Formula(line[2]).insert(0, pc.Step("U")*i)])
+                algo_dict.append([ids, line[1][-3*i:] + line[1][:-3*i], formula])
                 ids += 1
     algo_dict.append([ids, "000000000000", pc.Formula()])
 
