@@ -47,7 +47,6 @@ class Scramblegen:
 
     def FullScramble(self):
         faceOptions = (0, 1, 2, 3, 4, 5)
-        bad = True
         scramble = ""
         scrambleFaces = []
 
@@ -67,9 +66,9 @@ class Scramblegen:
 
     # Same as above, just with a custom length
     def CustomScramble(self, length):
+        assert length > 0
 
         faceOptions = (0, 1, 2, 3, 4, 5)
-        bad = True
         scramble = ""
         scrambleFaces = []
 

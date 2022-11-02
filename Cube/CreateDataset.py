@@ -212,7 +212,7 @@ def LL_scramble(count, path, write=True, processes=16):
             stop = time.perf_counter()
             stdout.write(f"\rDone in {stop - start:.2f}s\n")
 
-    header = ["Square % s" % i if i < 54 else "Type" for i in range(55)]
+    header = ["Square % s" % i if i < 54 else "Signature" for i in range(55)]
     ollpath = path / f"olls_{int(count / 1000)}k.csv"
     pllpath = path / f"plls_{int(count / 1000)}k.csv"
     t = Thread(target=pretty_loading_animation)

@@ -3,17 +3,20 @@ import pycuber as pc
 import tensorflow as tf
 
 
+# noinspection PyNoneFunctionAssignment,PyUnresolvedReferences
 def main():
     oll_algos = pd.read_csv("oll_algos.csv", header=None, dtype=str).values
     pll_algos = pd.read_csv("pll_algos.csv", header=None, dtype=str).values
 
     def y_dict(sequence):
+        """Swaps Colors of the Signature"""
         dic = {"L": "B", "F": "L", "R": "F", "B": "R"}
         res = ""
         for char in sequence:
             res += dic[char]
         return res
 
+    # Generates the ID, Signature, Formula and one-ho-vector for PLL
     ids = 0
     algo_dict = []
     for name, rec_id, algo in pll_algos:
@@ -44,6 +47,7 @@ def main():
         index=False
     )
 
+    # Generate ID, Signature, Formula and one-hot-vector for OLL
     ids = 0
     algo_dict = []
     for line in oll_algos:

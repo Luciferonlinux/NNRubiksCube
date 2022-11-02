@@ -15,6 +15,7 @@ def get_solved_f2l():
     return scramble.OLLScramble()
 
 
+# testfunc
 def stringify(intcube):
     """
     Converts a List of Ints to a String
@@ -43,7 +44,7 @@ def stringtolistparser(vector, dtype):
     return out
 
 
-def getdata(loadup_test_data=False):
+def getData(loadup_test_data=False):
     path = Path(__file__).parents[1] / "Datasets"
     typedict = {
         'Square 0': int, 'Square 1': int, 'Square 2': int, 'Square 3': int, 'Square 4': int,
@@ -156,7 +157,7 @@ def one_hotify(predicted_y):
 def fit_NN():
     (learnollmatrix, learnollvec, learnpllmatrix, learnpllvec,
      validationollmatrix, validationollvec, validationpllmatrix, validationpllvec
-     ) = getdata(loadup_test_data=False)
+     ) = getData(loadup_test_data=False)
     # print(f"learnollmatrix:\n{learnpllmatrix.shape}")
     # print(f"learnollvec:\n{learnpllvec.shape}")
     # print(f"validationollmatrix:\n{validationpllmatrix.shape}")
@@ -205,7 +206,7 @@ def fit_NN():
 
 
 def Use_NN():
-    (testoll_X, testoll_y, testpll_X, testpll_y, oll_lookup, pll_lookup) = getdata(loadup_test_data=True)
+    (testoll_X, testoll_y, testpll_X, testpll_y, oll_lookup, pll_lookup) = getData(loadup_test_data=True)
     oll_savepath = Path("training_oll/oll.ckpt")
     pll_savepath = Path("training_pll/pll.ckpt")
 

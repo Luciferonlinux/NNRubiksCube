@@ -7,7 +7,8 @@ import keras.metrics
 
 def conv_to_tensor(arg):
     """
-    Takes any list or tuple or nparray and converts it to a tf.Tensor
+    Takes any list or tuple or nparray and converts it to a tf.Tensor.
+    For test purposes only.
     """
     arg = tf.convert_to_tensor(arg, dtype=tf.float32)
     return arg

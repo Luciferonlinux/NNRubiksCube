@@ -328,5 +328,8 @@ $RECYCLE.BIN/
 
 # Data (Make your own data)
 *.csv
+*.svg
+*.pdf
+*.png
 
 # End of https://www.toptal.com/developers/gitignore/api/python,pycharm+all,windows,macos,venv
