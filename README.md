@@ -4,7 +4,7 @@
 
 Follow the Tensorflow installation Guide at: https://www.tensorflow.org/install/pip \
 Install additional Python Packages: `pycuber` `pandas` `numpy` `sklearn` \
-Using `pip install [PACKAGE_NAME]` \
+Using `pip install [PACKAGE_NAME]`
 
 Next is installing NNRubiksCube. You can download the source-code from: https://github.com/Luciferonlinux/NNRubiksCube \
 Or clone the Repository into a Folder of your choice
